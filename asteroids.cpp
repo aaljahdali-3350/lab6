@@ -35,6 +35,8 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 
 extern void showName();
 
+void drawBox();
+
 class Global {
 public:
 	int xres, yres;
@@ -739,7 +741,6 @@ void render()
 	//r.left = 10;
 	//r.center = 0;
 	//
-	showName();
 	//-------------
 	//Draw the ship
 	glColor3fv(g.ship.color);
@@ -826,9 +827,55 @@ void render()
 		++b;
 	}
 
+	drawBox();
+	// showName();
 	//ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
 	//ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
 	//ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
 	//ggprint8b(&r, 16, 0x00ffff00, "n asteroids destroyed: %d", gl.ndestroyed);
 
+}
+
+void drawBox() {
+	const int n = 4;
+	static float angle = 0.0;
+	static float inc = PI * 2.0 / (float)n;
+	static float matrix[2][2];
+	static float radius = 300;
+	static float point[n][2];
+
+	// setupPointsAndApplyRotation
+	for (int i=0; i<n; i++) {
+		// rebuildMatrix
+		matrix[0][0] = cos(angle);
+		matrix[0][1] = -sin(angle);
+		matrix[1][0] = sin(angle);
+		matrix[1][1] = cos(angle);
+
+		// reinitPoint
+		point[i][0] = radius;
+		point[i][1] = 0.0;
+
+		// applyRotationToPoint
+		point[i][0] = (point[i][0] * matrix[0][0] + point[i][1] * matrix[0][1]);
+		point[i][1] = (point[i][0] * matrix[1][0] + point[i][1] * matrix[1][1]);
+
+		angle += inc;
+	}
+
+	glPopMatrix();
+	glColor3ub(30,60,90);
+	glBegin(GL_POLYGON);
+	for (int i=0; i<n; i++) {
+		point[i][0] = sin(angle) * radius;
+		point[i][1] = cos(angle) * radius;
+		glVertex2f((radius/2) + point[i][0], gl.yres-(radius/2) + point[i][1]);
+		angle += inc;
+	}
+	glEnd();
+	usleep(100);
+	printf("%f\n", angle);
+	if (angle >= 360*11)
+		angle = 0;
+	angle += 0.01;
 }
