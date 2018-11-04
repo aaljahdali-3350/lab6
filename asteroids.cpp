@@ -1,30 +1,6 @@
-//
-//
-//
-//modified by: Abdullah Aljahdali
-//date:    Feb 1, 18
-//program: asteroids.cpp
-//author:  Gordon Griesel
-//date:    2014 - 2018
-//mod spring 2015: added constructors
-//mod spring 2018: X11 wrapper class
-//This program is a game starting point for a 3350 project.
-//
-#include <iostream>
-#include <cstdlib>
-#include <cstring>
-#include <ctime>
-#include <cmath>
-using namespace std;
-#include <unistd.h>
-#include <X11/Xlib.h>
-//#include <X11/Xutil.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
-#include <X11/keysym.h>
-#include <GL/glx.h>
-#include "log.h"
-#include "fonts.h"
+//by: Abdullah Aljahdali
+
+#include "abdullahA.h"
 
 //defined types
 typedef float Flt;
@@ -56,6 +32,8 @@ extern struct timespec timeStart, timeCurrent;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
+
+extern void showName();
 
 class Global {
 public:
@@ -200,7 +178,7 @@ public:
 		if (vi == NULL) {
 			std::cout << "\n\tno appropriate visual found\n" << std::endl;
 			exit(EXIT_FAILURE);
-		} 
+		}
 		Colormap cmap = XCreateColormap(dpy, root, vi->visual, AllocNone);
 		swa.colormap = cmap;
 		swa.event_mask = ExposureMask | KeyPressMask | KeyReleaseMask |
@@ -298,7 +276,7 @@ void render();
 //==========================================================================
 int main()
 {
-	logOpen();
+	//logOpen();
 	init_opengl();
 	srand(time(NULL));
 	x11.set_mouse_position(100, 100);
@@ -314,8 +292,8 @@ int main()
 		render();
 		x11.swapBuffers();
 	}
-	cleanup_fonts();
-	logClose();
+	//cleanup_fonts();
+	//logClose();
 	return 0;
 }
 
@@ -338,7 +316,7 @@ void init_opengl()
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	//Do this to allow fonts
 	glEnable(GL_TEXTURE_2D);
-	initialize_fonts();
+	//initialize_fonts();
 }
 
 void normalize2d(Vec v)
@@ -415,7 +393,7 @@ void check_mouse(XEvent *e)
 			int xdiff = savex - e->xbutton.x;
 			int ydiff = savey - e->xbutton.y;
 			if (++ct < 10)
-				return;		
+				return;
 			if (xdiff > 0) {
 				//mouse moved along the x-axis.
 				g.ship.angle += 0.05f * (float)xdiff;
@@ -754,13 +732,14 @@ void physics()
 
 void render()
 {
-	Rect r;
+	//Rect r;
 	glClear(GL_COLOR_BUFFER_BIT);
 	//
-	r.bot = gl.yres - 20;
-	r.left = 10;
-	r.center = 0;
+	//r.bot = gl.yres - 20;
+	//r.left = 10;
+	//r.center = 0;
 	//
+	showName();
 	//-------------
 	//Draw the ship
 	glColor3fv(g.ship.color);
@@ -847,15 +826,9 @@ void render()
 		++b;
 	}
 
-	ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
-	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
-	ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
-	ggprint8b(&r, 16, 0x00ffff00, "n asteroids destroyed: %d", gl.ndestroyed);
+	//ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
+	//ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
+	//ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
+	//ggprint8b(&r, 16, 0x00ffff00, "n asteroids destroyed: %d", gl.ndestroyed);
 
 }
-
-
-
-
-
-
